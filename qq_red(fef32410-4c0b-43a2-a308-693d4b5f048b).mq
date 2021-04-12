@@ -1,0 +1,85 @@
+Dim intX, intY
+Do
+	Delay 300
+	Call normal()
+	//Delay 10
+	Call text()
+Loop
+
+Function normal()
+    KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:normal_red_pack.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	If intX > -1 And intY > -1 Then 
+		TracePrint "找到了普通红包"
+		Tap intX, intY
+		Call return_group()
+	Else TracePrint "没找到普通红包"
+		 Call return_group()
+	End If
+	ReleaseCapture
+End Function
+
+Function text()
+	KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:text_red_pack.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	If intX > -1 And intY > -1 Then 
+		TracePrint "找到了口令红包"
+		Tap intX, intY
+		Call input()
+		Call send()
+		Call return_group()
+	Else TracePrint "没找到口令红包"
+		 Call input()
+		 Call send()
+		 Call return_group()
+	End If
+	ReleaseCapture
+End Function
+Function return_group()
+	KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:close.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	If intX > -1 And intY > -1 Then 
+		TracePrint "关闭"
+		Tap intX, intY
+		Call return_group()
+	Else TracePrint "没找到关闭按钮"
+		Tap 650, 220
+	End If
+	ReleaseCapture
+	/*FindPic 0, 0, 200, 200, "Attachment:return.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	If intX > -1 And intY > -1 Then 
+		TracePrint "关闭"
+		Tap intX, intY
+		Call return_group()
+	Else TracePrint "没找到关闭按钮"
+		//Tap 650, 220
+	End If*/
+End Function
+
+Function send()
+	KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:send.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	If intX > -1 And intY > -1 Then 
+		TracePrint "发送"
+		Tap intX, intY
+	Else TracePrint "没找到发送按钮"
+	End If
+	ReleaseCapture
+End Function
+
+Function input()
+KeepCapture 
+	FindPic 0, 0, 0, 0, "Attachment:input.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	If intX > -1 And intY > -1 Then 
+		TracePrint "点击输入口令"
+		Tap intX, intY+60
+	Else TracePrint "没找到输入口令"
+	End If
+	ReleaseCapture
+End Function

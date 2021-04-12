@@ -1,0 +1,10 @@
+Dim intX, intY
+
+RunApp "com.tencent.mobileqq"
+Call 点消息()
+Function 点消息()
+	For 2
+		Delay 300
+		Tap 87, 1225
+	Next
+End Function

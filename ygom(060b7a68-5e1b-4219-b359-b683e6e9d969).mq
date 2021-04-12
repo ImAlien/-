@@ -1,0 +1,18 @@
+Dim intX, intY
+close()
+Function 回到主界面()
+	
+End Function
+Function close()
+	KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:返回.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	If intX > -1 And intY > -1 Then 
+		TracePrint "返回"
+		Tap intX, intY
+		//Call return_group()
+	Else TracePrint "没找到返回按钮"
+		Tap 650, 220
+	End If
+	ReleaseCapture
+End Function

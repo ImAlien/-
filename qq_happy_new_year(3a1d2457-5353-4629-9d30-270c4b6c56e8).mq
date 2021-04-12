@@ -1,0 +1,104 @@
+Dim intX, intY
+main()
+Function main()
+	Do
+		Call click_friend()
+		Delay 1000
+		Swipe 113,976,110,858,600
+		Delay 1000
+		Call 到达消息界面()
+		Call return()
+	Loop
+End Function
+Function 拜年()
+	Call click_friend()
+	Delay 1000
+	Swipe 113,976,110,858,600
+	Delay 1000
+	Call 到达消息界面()
+	Call return()
+End Function
+Function 点击在线()
+	Delay 500
+	KeepCapture
+	FindPic 23,417,676,1160,"Attachment:zaixian.png","050505",0,0.9,intX,intY
+	If intX > -1 And intY > -1 Then
+		TracePrint intX
+		TracePrint intY
+		TracePrint "找到在线图标"
+		Tap intX, intY
+	Else TracePrint "没有找到在线图标"
+	End If
+	ReleaseCapture
+End Function
+
+Function 点击发消息()
+	Delay 500
+	KeepCapture
+	FindPic 360,0,720,1280,"Attachment:faxiaoxi.png","050505",0,0.9,intX,intY
+	If intX > -1 And intY > -1 Then
+		TracePrint intX
+		TracePrint intY
+		TracePrint "找到发消息图标"
+		Tap intX,intY
+	Else TracePrint "没有找到发消息图标"
+	End If
+	ReleaseCapture
+End Function
+
+Function 到达消息界面()
+	Do
+		Delay 500
+		KeepCapture
+		FindPic 0,0,720,1200,"Attachment:xxjm.png","050505",0,0.9,intX,intY
+		If intX > -1 And intY > -1 Then
+			TracePrint intX
+			TracePrint intY
+			TracePrint "到达消息界面"
+			Exit Do
+		Else 
+			TracePrint "没有到达消息界面"
+			Call click_myfriend()
+			Call 点击在线()
+			Call 点击发消息()
+		End If
+		ReleaseCapture
+	Loop
+	Call 发消息()
+End Function
+
+Function 发消息()
+	Delay 500
+	For 2
+		Delay 100
+		Tap 200,1168
+	Next
+	Delay 200
+	InputText "你好"
+	Delay 200
+	For 2
+		Tap 638,1168
+	Next
+End Function
+Function return()
+	Delay 500
+	Tap 31, 96
+End Function
+Function click_myfriend()
+	Delay 500
+	KeepCapture
+	FindPic 0,0,720,1200,"Attachment:friend.png","050505",0,0.9,intX,intY
+	If intX > -1 And intY > -1 Then
+		TracePrint intX
+		TracePrint intY
+		TracePrint "找到我的好友"
+		Tap intX, intY
+	Else TracePrint "没有找到我的好友"
+	End If
+	ReleaseCapture
+End Function
+
+Function click_friend()
+		Delay 1000
+		Tap 270,1217
+End Function

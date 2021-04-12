@@ -1,0 +1,6 @@
+Dim intX,intY
+FindPic 129,938,594,1205, "Attachment:¹Ø±Õ.png", "050505", 0, 0.9, intX, intY
+If intX > -1 And intY > -1 Then
+	TracePrint intX
+	TracePrint intY
+End If

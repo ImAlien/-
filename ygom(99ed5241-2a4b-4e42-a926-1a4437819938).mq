@@ -1,0 +1,1398 @@
+Dim intX, intY
+Dim ifmove, ifenter
+Dim ifprocess
+Dim iffight
+Dim messages = "test"
+//Dim y = Thread.Start(显示("test"))
+main
+//第四层迷宫()
+//决斗("Attachment:主页面.png")
+//process2()
+//骰子活动主函数 
+//使用道具()
+//心灵迷宫主函数()
+//打开心灵迷宫()
+//心灵迷宫城之内()
+//找路人()
+//自动打路人()
+//try_确定()
+//跳过对话()
+//关闭()
+//close()
+//确定("Attachment:主页面.png")
+//跳转("Attachment:自动决斗.png")
+Function main()
+	Do
+		Call 自动打路人()
+		//Call 心灵迷宫主函数()
+		Call 团结之力()
+		Dim waittime = 1000*60*120
+		ShowMessage("停止中，等待下一次运行",waittime)
+		Delay waittime
+	Loop
+	
+End Function
+Function 团结之力()
+	Call 回到主页面()
+	Tap 656, 573
+	Call mulcor_确定("00DFFF","8|23|00DFFF,8|46|FFB300,10|53|00E8FF,10|70|2C1508,14|75|00E5ED")
+	Do
+		Delay 500
+		Call 多点找色(Array(153,898,583,1063,"78CBFF","8|0|78CBFF,15|0|100703,24|0|78CBFF,33|2|0D0703,36|0|78CBFF"))
+		If intX > -1 Then 
+			TracePrint "挑战"
+			Tap intX, intY
+			Call 确定("Attachment:自动决斗.png")
+			Call mulcor_自动决斗("00DFFF","8|23|00DFFF,8|46|FFB300,10|53|00E8FF,10|70|2C1508,14|75|00E5ED")
+		Else 
+			Call 回到主页面()
+			Exit Do
+		End If
+	Loop
+End Function
+Function 多点找色(a)
+	KeepCapture
+	FindMultiColor a(0), a(1), a(2), a(3), a(4), a(5), 0, 0.95, intX, intY
+	ReleaseCapture
+End Function
+Function mulcor_确定(a, b)
+	Do
+		Delay 1000
+		KeepCapture
+		//FindPic 0,0,0,0,img_name,"050505",0,0.9,intX,intY
+		Call 多点找色(Array(0,0,0,0,a,b))
+		ReleaseCapture 
+		If intX > -1 Then 
+			TracePrint "跳转成功"
+			Exit Do
+		Else 
+			Dim flag = 0
+			TracePrint "跳转中"
+			Call try_确定()
+			Call try_下一步()
+			Call try_跳过对话()
+			Call try_关闭()
+			Call try_取消()
+			//Else 
+				//TracePrint "点击空白处", index
+				//Tap xpos(index), ypos(index)
+				//index = (index + 1) Mod (UBOUND(xpos)+1)
+			Call close()
+		End If	
+	Loop
+End Function
+Function 跳转(img_name)
+	Do
+		KeepCapture
+		FindPic 0,0,0,0, img_name,"050505",0,0.9,intX,intY
+		ReleaseCapture 
+		If intX > -1 Then 
+		    TracePrint "成功跳转"
+			Exit Do
+		Else 
+			Dim flag = 0
+			Delay 500
+			KeepCapture
+			//FindPic 0,0,0,0, "Attachment:对话.png|Attachment:对话3.png","050505",0,0.9,intX,intY
+			FindMultiColor 0,0,0,0 ,"FFFFFF","73|1|FFFFFF,173|9|FFFFFF,307|9|FFFFFF,-36|94|FFFFFF,218|108|FFFFFF",0,0.95,intX,intY
+			ReleaseCapture
+			If intX > -1 And intY > -1 Then 
+				Tap intX, intY
+				TracePrint "跳过对话中"
+				flag = 1
+			End If
+			KeepCapture
+			FindPic 0,0,0,0, "Attachment:对话.png|Attachment:对话3.png","050505",0,0.9,intX,intY
+			//FindMultiColor 0,0,0,0 ,"FFFFFF","73|1|FFFFFF,173|9|FFFFFF,307|9|FFFFFF",0,0.95,intX,intY
+			ReleaseCapture
+			If intX > -1 And intY > -1 Then 
+				Tap intX, intY
+				TracePrint "跳过对话中"
+				flag = 1
+			End If
+			If flag = 0 Then 
+				TracePrint "跳转失败"
+			End If
+		End If
+	Loop
+End Function
+Function 找感叹号()
+	Do
+		Dim flag= 0
+		FindMultiColor(0,0,0,0,"019DFF","-1|-10|E2EFF6,1|-16|008DFF,7|-17|1C96C1,-7|-16|29BEF1",_
+		0,0.9,intX, intY)
+		If intX > -1 Then 
+			flag = 1
+			Tap intX, intY+25
+			Delay 500
+			Call 确定("Attachment:主页面.png")
+		End If
+		If flag = 0 Then 
+			Exit Do
+		End If
+	Loop
+End Function
+Function 找路人()
+	Do
+		iffight = 0
+		Delay 1000
+		KeepCapture
+		FindMultiColor 194,554,707,981,"DBD90F","-3|-5|E1D510,1|-4|FEFEDC,-1|-7|FFFFED",1,0.95,intX, intY	
+		ReleaseCapture
+		If intX > -1 Then 
+			TracePrint "找到路人"
+			Tap intX - 20, intY
+			Delay 500
+			Call 跳转("Attachment:自动决斗.png")
+			Call 自动决斗("Attachment:主页面.png")
+			//Call 确定("Attachment:主页面.png")
+			iffight = 1
+		End If
+		//小红帽
+		KeepCapture
+		FindMultiColor 0,0,0,0,"3DBCDF","3|-1|E9F8FF,4|-6|21B3E7,-33|4|4444BF",1,0.95,intX, intY	
+		ReleaseCapture
+		If intX > -1 Then 
+			TracePrint "找到小红帽"
+			Tap intX - 20, intY
+			Delay 500
+			Call 跳转("Attachment:自动决斗.png")
+			Call 自动决斗("Attachment:主页面.png")
+			//Call 确定("Attachment:主页面.png")
+			iffight = 1
+		End If
+		//传奇决斗者
+		KeepCapture
+		FindMultiColor 194,554,707,981,"E14418","2|-2|FFFCEA,3|-4|DF710C,6|-7|EEEEEE",1,0.95,intX, intY	
+		ReleaseCapture
+		If intX > -1 Then 
+			TracePrint "找到传奇决斗者"
+			Tap intX - 20, intY
+			Delay 500
+			Call 跳转("Attachment:自动决斗.png")
+			Call 自动决斗("Attachment:主页面.png")
+			//Call 确定("Attachment:主页面.png")
+			iffight = 1
+		End If
+		//活动
+		KeepCapture
+		FindMultiColor 0,0,0,0,"BAD4E5","-7|-1|EAE9E5,-34|-1|FF6728,8|-68|F8F6F5",1,0.95,intX, intY	
+		ReleaseCapture
+		If intX > -1 Then 
+			TracePrint "找到活动"
+			Tap intX , intY
+			Delay 500
+			Call 跳转("Attachment:自动决斗.png")
+			Call 自动决斗("Attachment:主页面.png")
+			//Call 确定("Attachment:主页面.png")
+			iffight = 1
+		End If
+		If iffight = 0 Then 
+			TracePrint "当前页没有路人"
+			Exit Do
+		End If
+	Loop
+End Function
+Function 翻页()
+	Swipe 536,336,281,336
+End Function
+Function 自动打路人()
+	Dim cnt = 0
+	Do
+	    Delay  1000
+		iffight = 0
+		Call 找感叹号()
+		Call 找路人()
+		If iffight = 0 Then 
+			cnt = cnt + 1
+			TracePrint "当前页没有路人", cnt
+			Call 翻页()
+			If cnt = 5 Then 
+				Exit Do
+			End If
+		Else cnt = 0
+		End If
+		
+	Loop
+End Function
+Function 骰子活动界面()
+	Do
+		KeepCapture
+		FindPic 0, 0, 0, 0, "Attachment:奖励.png","000000", 0, 0.9, intX, intY
+		//如果没有找到，intX和intY的值都会被置为-1
+		ReleaseCapture 
+		If intX > -1 Then 
+			TracePrint "是活动界面"
+			Exit Do
+		Else 
+			Call 回到主页面()
+			Do
+				KeepCapture
+				FindPic 0, 0, 0, 0, "Attachment:骰子界面.png","000000", 0, 0.9, intX, intY
+				//如果没有找到，intX和intY的值都会被置为-1
+				ReleaseCapture 
+				If intX > -1 Then 
+					Tap intX, intY
+					Delay 1500
+					Exit Do 
+				Else TracePrint "没找到骰子活动"
+				End If
+			Loop
+		End If
+	Loop
+End Function
+Function 选40级()
+	Do
+		KeepCapture
+		FindPic 0, 0, 0, 0, "Attachment:自动决斗.png","000000", 0, 0.9, intX, intY
+			//如果没有找到，intX和intY的值都会被置为-1
+		ReleaseCapture 
+		If intX > -1 Then 
+			Exit Do
+		Else Tap 528,720
+		End If
+	Loop
+End Function
+Function 骰子活动自动决斗()
+	Do
+		KeepCapture
+		FindPic 0, 0, 0, 0, "Attachment:奖励.png","000000", 0, 0.9, intX, intY
+			//如果没有找到，intX和intY的值都会被置为-1
+		ReleaseCapture 
+		If intX > -1 Then 
+			Exit Do
+		Else 
+			Call 自动决斗("Attachment:奖励.png")
+		End If
+	Loop
+End Function
+Function 骰子活动决斗()
+	Call 选40级()
+	Call 骰子活动自动决斗()
+End Function
+Function 骰子活动处理界面()
+	Dim ret
+	Dim cnt = 0
+	//Dim flag = 0
+	Do
+		Delay 1000
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:奖励.png","050505",0,0.9,intX,intY
+		ReleaseCapture
+		If intX > -1 Then 
+			TracePrint "处理结束"
+			Exit Do 
+		Else 
+			KeepCapture
+			ret = FindPic( 0,0,0,0,_
+			"Attachment:等级.png|Attachment:自动决斗.png|Attachment:确定.png|Attachment:关闭.png|Attachment:开始.png|Attachment:确定2.png|Attachment:摇摇机.png",_
+			"101010",1,0.7,intX,intY)
+			ReleaseCapture 
+			TracePrint "ret = ", ret
+			TracePrint intX, intY
+			If ret = 0 Then 
+				Call 骰子活动决斗()
+			End If
+			If ret = 1 Then 
+				Call 自动决斗("Attachment:奖励.png")
+			End If
+			If ret = 2 Or ret = 5 Then 
+				Call 确定("Attachment:奖励.png")
+			End If
+			If ret = 3 Then 
+				Call 关闭()
+			End If
+			If ret = 4 Then 
+				Call 骰子对决()
+			End If
+			If ret = 6 Then 
+				Call 摇摇机()
+			End If
+			If ret = -1 Then 
+				Call try_跳过对话()
+			End If
+			cnt = cnt + 1
+			If cnt >= 3 Then 
+				Tap 370,830
+			End If
+			ifprocess = 1
+		End If
+	Loop
+End Function
+Function 掷骰子()
+	Do
+		Delay 1000
+		KeepCapture
+		FindPic 0, 0, 0, 0, "Attachment:不能掷骰子.png","000000", 0, 0.9, intX, intY
+		//如果没有找到，intX和intY的值都会被置为-1
+		ReleaseCapture 
+		If intX > -1 Then 
+			TracePrint  "不能掷骰子"
+			Exit Do
+		Else 
+			Tap 578, 945
+			Delay 2000
+			Call 骰子活动处理界面()
+		End If
+	Loop
+End Function
+Function 点击确定()
+	Dim xpos,ypos, index
+	xpos = Array(524,370)
+	ypos = Array(703,1200)
+	index = 0
+	Delay 1000
+	KeepCapture
+	FindPic 0,0,0,0, "Attachment:确定.png|Attachment:确定2.png|Attachment:下一步.png","050505",0,0.9,intX,intY
+	ReleaseCapture 
+	If intX > -1 And intY > -1 Then 
+		TracePrint "确定,下一步"
+		Tap intX, intY
+	Else 
+		TracePrint "点击空白处", index
+		Tap xpos(index), ypos(index)
+		index = (index + 1) Mod (UBOUND(xpos)+1)
+	End If
+End Function
+Function 使用道具()
+	Dim flag= 0
+	Do
+		flag = 0
+		Delay 1000
+		KeepCapture
+		//FindPic 204,486,675,630, "Attachment:无道具.png","050505",0,0.9,intX,intY
+		FindColor 204,486,675,630, "424242",0,1.0,intX, intY
+		ReleaseCapture 
+		If intX = -1 Then 
+			flag = 1
+			TracePrint "有骰子1"
+			Tap 440,560
+			Call 点击确定()
+			ifprocess = 0
+			For 3
+				Delay 2000
+				Call 骰子活动处理界面()
+				If ifprocess = 1 Then 
+					Exit For
+				End If
+			Next
+			Exit Do
+		End If
+		KeepCapture
+		//FindPic 200,826,693,921, "Attachment:无道具.png","050505",0,0.9,intX,intY
+		FindColor 288,857,594,901, "424242",0,1.0,intX, intY
+		ReleaseCapture 
+		If intX = -1 Then 
+			flag = 1
+			TracePrint "有骰子3"
+			Tap 440,870
+			Call 点击确定()
+			ifprocess = 0
+			For 3
+				Delay 2000
+				Call 骰子活动处理界面()
+				If ifprocess = 1 Then 
+					Exit For
+				End If
+			Next
+			Exit Do
+		End If
+		KeepCapture
+		//FindPic 198,653,684,766, "Attachment:无道具.png","050505",0,0.9,intX,intY
+		FindColor 198,653,684,766, "424242",0,1.0,intX, intY
+		ReleaseCapture 
+		If intX = -1 Then 
+			TracePrint "有骰子2"
+			flag = 1
+			Tap 440,720
+			Call 点击确定()
+			ifprocess = 0
+			For 3
+				Delay 2000
+				Call 骰子活动处理界面()
+				If ifprocess = 1 Then 
+					Exit For
+				End If
+			Next
+			Exit Do
+		End If
+		KeepCapture
+		//FindPic 198,653,684,766, "Attachment:无道具.png","050505",0,0.9,intX,intY
+		FindColor 298,387,579,428, "424242",0,1.0,intX, intY
+		ReleaseCapture 
+		If intX = -1 Then 
+			TracePrint "有挑战券"
+			flag = 1
+			Tap 440,400
+			Call 点击确定()
+			ifprocess = 0
+			For 3
+				Delay 2000
+				Call 骰子活动处理界面()
+				If ifprocess = 1 Then 
+					Exit For
+				End If
+			Next
+			Exit Do
+		End If
+	Loop
+End Function
+Function 处理门票()
+	Do
+		Delay 1000
+		KeepCapture
+		FindPic 0, 0, 0, 0, "Attachment:骰子道具.png","000000", 0, 0.9, intX, intY
+		//如果没有找到，intX和intY的值都会被置为-1
+		ReleaseCapture 
+		If intX > -1 Then 
+		 	TracePrint "有道具"
+			Tap intX, intY + 50
+			Call 使用道具()
+		Else 
+			TracePrint  "没有道具"
+			Exit Do
+		End If
+	Loop
+End Function
+Function 骰子活动主函数()
+	Call 骰子活动界面()
+	Call 掷骰子()
+	Call 处理门票()
+End Function
+Function 心灵迷宫主函数()
+	Dim x1,y1,x2,y2,x3,y3,x4,y4
+	KeepCapture
+	FindMultiColor(0,0,0,0,"FFFFFF","6|-40|FFFFFF,-8|-35|FFFFFF,55|-13|FDFCFC,31|7|FFFEFE,-19|-64|000000,102|-66|000000,225|-31|5E002A",_
+	0,0.95,x1,y1)
+	FindMultiColor(0,0,0,0,"650234","-242|-13|F7F5F5,-198|-22|190C0B,-200|1|FFFFFE,-248|14|FEFEFE,-251|31|FFFFFF,-204|33|FFFFE8,-228|32|FFFFFF",_
+	0,0.95,x2,y2)
+	x2 = -1
+	FindMultiColor(0,0,0,0,"FFFFFF","34|0|FFFFFF,37|23|772200,26|20|FFFFFF,19|45|FFFFFF,26|53|781705,233|13|620130",_
+	0,0.95,x3,y3)
+	FindMultiColor(0,0,0,0,"000000","14|19|FFFFFF,-5|33|FFFFFF,-24|45|FDFCFB,1|50|FFFFFF,27|49|FFFFFD,224|29|4791CD",_
+	0,0.95,x4,y4)
+	ReleaseCapture 
+	If x1 = -1 And x2 = -1 And x3 = -1 And x4 = -1 Then
+		Call 心灵迷宫城之内()
+		ifenter = 0
+		Call 进入迷宫()
+		Call try_跳过对话()
+	Else ifenter = 1
+	End If
+	If ifenter = 1 Then 
+		Do
+			Delay 2000
+			KeepCapture
+			/*ret = FindPic( 0, 0, 0, 0,_
+		 	"Attachment:第一层.png|Attachment:第二层.png|Attachment:第三层.png|Attachment:第四层.png","000000",_
+		  	0, 0.9, intX, intY)*/
+			//如果没有找到，intX和intY的值都会被置为-1
+			FindMultiColor(0,0,0,0,"FFFFFF","6|-40|FFFFFF,-8|-35|FFFFFF,55|-13|FDFCFC,31|7|FFFEFE,-19|-64|000000,102|-66|000000,225|-31|5E002A",_
+			0,0.95,x1,y1)
+			FindMultiColor(0,0,0,0,"650234","-242|-13|F7F5F5,-198|-22|190C0B,-200|1|FFFFFE,-248|14|FEFEFE,-251|31|FFFFFF,-204|33|FFFFE8,-228|32|FFFFFF",_
+			0,0.95,x2,y2)
+			FindMultiColor(0,0,0,0,"FFFFFF","34|0|FFFFFF,37|23|772200,26|20|FFFFFF,19|45|FFFFFF,26|53|781705,233|13|620130",_
+			0,0.95,x3,y3)
+			FindMultiColor(0,0,0,0,"000000","14|19|FFFFFF,-5|33|FFFFFF,-24|45|FDFCFB,1|50|FFFFFF,27|49|FFFFFD,224|29|4791CD",_
+			0,0.95,x4,y4)
+			ReleaseCapture
+			If x1 > -1 Then 
+				TracePrint "第一层迷宫"
+				第一层迷宫 
+			Else 
+			If x2 > -1 Then 
+				TracePrint "第二层迷宫"
+				第二层迷宫
+			Else 
+			If x3 > -1 Then 
+				TracePrint "第三层迷宫"
+				第三层迷宫 
+			Else 
+			If x4 > -1 Then 
+				第四层迷宫
+			End If
+			End If
+			End If
+			End If
+		Loop
+	End If
+	
+End Function
+Function 回到主页面()
+	Call 确定("Attachment:主页面.png")
+End Function
+Function 返回()
+	KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:返回.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	ReleaseCapture
+	If intX > -1 And intY > -1 Then 
+		TracePrint "返回"
+		Tap intX, intY
+		//Call return_group()
+	Else TracePrint "没找到返回按钮"
+	End If
+End Function
+Function 中文返回()
+	KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:中文返回.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	ReleaseCapture
+	If intX > -1 And intY > -1 Then 
+		TracePrint "返回"
+		Tap intX, intY
+		//Call return_group()
+	Else TracePrint "没找到返回按钮"
+	End If
+End Function
+Function 进入迷宫()
+	Dim cnt= 0
+	Do
+		KeepCapture
+		FindPic 0, 0, 0, 0, "Attachment:进入迷宫.png","000000", 0, 0.9, intX, intY
+		//如果没有找到，intX和intY的值都会被置为-1
+		ReleaseCapture
+		If intX > -1 And intY > -1 Then 
+			TracePrint "点击进入迷宫"
+			Tap intX, intY
+			Delay 1000
+			KeepCapture
+			FindPic 0, 0, 0, 0, "Attachment:未满.png","000000", 0, 0.9, intX, intY
+			//如果没有找到，intX和intY的值都会被置为-1
+			ReleaseCapture 
+			If intX > -1 Then 
+				TracePrint "黑暗能量未满"
+				Call 中文返回()
+				Call 回到主页面()
+				Exit Do
+			Else 
+				Call 是()
+				ifenter = 1
+				Exit Do
+			End If
+			//Call return_group()
+		Else 
+			TracePrint "没找到进入迷宫"	
+			cnt = cnt + 1
+			If cnt >= 3 Then 
+			 	Call 回到主页面()
+				Exit Do 
+			End If
+		End If
+	Loop
+	
+End Function
+Function 打开心灵迷宫()
+	Do
+		Delay 2000
+		KeepCapture
+		FindPic 0, 0, 0, 0, "Attachment:心灵迷宫.png","000000", 0, 0.9, intX, intY
+		//如果没有找到，intX和intY的值都会被置为-1
+		ReleaseCapture
+		If intX > -1 And intY > -1 Then 
+		TracePrint "是心灵迷宫"
+		Exit Do
+		//Tap intX, intY
+		//Call return_group()
+		Else TracePrint "不是心灵迷宫"
+			Call 回到主页面()
+			Call 点击怪物之门() 
+			Call 点击心灵迷宫()
+		End If
+	Loop
+End Function
+Function 点击心灵迷宫()
+	Delay 1000
+	KeepCapture 
+	//FindPic 0,0,0,0, "Attachment:心灵迷宫.png","050505", 0,0.9,intX, intY
+	FindMultiColor(0,0,0,0,"DFDDDD","2|-42|923A53,24|7|803544,2|38|943B4F",_
+	0,0.95, intX, intY)
+	
+If intX > -1 And intY > -1 Then
+End If
+
+	Tap intX, intY
+	ReleaseCapture 
+	Delay 1000
+	Dim ret
+	ret = ReadUIConfig("心灵迷宫", 0)
+	If ret = 0 Then 
+		FindMultiColor(0,0,0,0,"3163FF","6|34|3163FF,37|-12|3163FF,60|38|3163FF,81|35|622929",_
+	   0,0.95,intX,intY)
+		If intX > -1 Then 
+			Tap intX, intY
+		Else TracePrint "没找到心灵迷宫入口"
+		End If
+	Else 
+	If ret = 1 Then 
+		FindMultiColor(0,0,0,0,"3163FF","6|34|3163FF,37|-12|3163FF,60|38|3163FF,81|35|622929",_
+		0,0.95,intX,intY)
+		If intX > -1 Then 
+			Tap intX, intY
+		Else TracePrint "没找到心灵迷宫入口"
+		End If
+	End If		
+	End If
+End Function
+Function 点击怪物之门()
+	Delay 500
+	KeepCapture
+	FindPic 28,1100,702,1276,"Attachment:怪物之门.png","050505",0,0.9,intX,intY
+	If intX > -1 And intY > -1 Then
+		TracePrint intX
+		TracePrint intY
+		TracePrint "找到怪物之门"
+		Tap intX, intY
+	Else TracePrint "没有找到怪物之门"
+	End If
+	ReleaseCapture
+End Function
+
+Function 心灵迷宫城之内()
+	Do
+		Delay 2000
+		KeepCapture
+		FindPic 0, 0, 0, 0, "Attachment:进入迷宫.png","000000", 0, 0.9, intX, intY
+		//如果没有找到，intX和intY的值都会被置为-1
+		ReleaseCapture
+		If intX > -1 And intY > -1 Then 
+		TracePrint "是进入迷宫入口"
+		Exit Do
+		//Tap intX, intY
+		//Call return_group()
+		Else TracePrint "不是迷宫入口"
+			Call 打开心灵迷宫()
+			Call 点击心灵迷宫()
+			Delay 200
+			Tap 350,500
+		End If
+	Loop
+	
+End Function
+
+
+
+Function 是()
+	Delay 1000
+	KeepCapture
+	FindPic 0,0,0,0, "Attachment:是.png","050505",0,0.9,intX,intY
+	If intX > -1 And intY > -1 Then
+		TracePrint "是"
+		Tap intX, intY
+	Else TracePrint "否"
+	End If
+	ReleaseCapture
+End Function
+
+Function 否()
+	Delay 1000
+	KeepCapture
+	FindPic 0,0,0,0, "Attachment:否.png","050505",0,0.9,intX,intY
+	If intX > -1 And intY > -1 Then
+		TracePrint "点击否"
+		Tap intX, intY
+	Else TracePrint "没找到否"
+	End If
+	ReleaseCapture
+End Function
+Function try_跳过对话()
+	KeepCapture
+	FindPic 0,0,0,0, "Attachment:对话.png|Attachment:对话3.png","050505",0,0.9,intX,intY
+	ReleaseCapture
+	If intX > -1 And intY > -1 Then 
+		Tap intX, intY
+		TracePrint "跳过对话"
+	Else 
+		KeepCapture
+		//FindPic 0,0,0,0, "Attachment:对话.png|Attachment:对话3.png","050505",0,0.9,intX,intY
+		FindMultiColor 0,0,0,0, "FFFFFF","90|0|F7F7F7,124|-163|CCB951,59|-162|765600,-366|-157|010000,1|131|FFFFFF",_
+		0,0.95,intX, intY
+		ReleaseCapture
+		If intX > -1 And intY > -1 Then 
+			Tap intX, intY
+			TracePrint "跳过对话"
+		End If
+	End If
+End Function
+Function try_返回()
+	KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:返回.png","000000", 0, 0.9, intX, intY
+	//如果没有找到，intX和intY的值都会被置为-1
+	ReleaseCapture
+	If intX > -1 And intY > -1 Then 
+		TracePrint "返回"
+		Tap intX, intY
+		//Call return_group()
+	End If
+End Function
+Function 跳过对话()
+    Dim cnt
+	cnt = 0
+	Do
+		Delay 500
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:对话.png|Attachment:对话3.png","050505",0,0.9,intX,intY
+		ReleaseCapture
+		If intX > -1 And intY > -1 Then 
+			Do
+				TracePrint intX,intY
+				TracePrint "跳过对话"
+				Tap intX, intY + 100
+				KeepCapture 
+				FindPic 0,0,0,0, "Attachment:对话.png|Attachment:对话3.png","050505",0,0.9,intX,intY
+				ReleaseCapture 
+				If intX = -1 Then 
+					Exit Do 
+				End If
+			Loop
+			Exit Do
+		Else 
+			TracePrint "没找到跳过对话",cnt
+			cnt = cnt+ 1
+			If cnt > 3 Then 
+				Exit Do
+			End If
+		End If
+	Loop
+	
+End Function
+
+Function 第一层迷宫()
+	Dim a
+	a = Array(1,2,2,3,3,4,3,2,3,4,2,3,4,4,4,4,1,2,1,1,4,3,1,1,1,2,2)
+	/*For i = 0 To 26
+		TracePrint i, a(i)
+		Delay 100
+		Call move(a(i))
+		Call process()
+	Next*/
+	For Each x In a
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+	Dim b
+	b = Array(1, 1, 1, 1, 1, 2, 2, 4, 4, 4, 4, 2, 2, 1, 1)
+	For Each x In b
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+End Function
+Function 第二层迷宫()
+	Dim a
+	a = Array(2,3,4,4,1,4,3,3,3,3,2,2,2,1,4,3,4,4,1,1,1,1)
+	For Each x In a
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+	Dim b
+	b = Array(1, 1, 1, 1, 1,1,1, 2, 2,2, 3,4, 4, 4, 4, 3,3)
+	For Each x In b
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+	Dim c
+	c = Array(2,3,2,1,2,3,3,3)
+	For Each x In c
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+End Function
+Function 第三层迷宫()
+	Dim a
+	a = Array(2,1,1,1,1,1,1,1,1,1,3,2,4,_
+	4,4,4,4,2,1,3,3,3,2,4,3,3,2,4,3)
+	For Each x In a
+		TracePrint x
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			Call process()
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+		
+	Next
+	Dim b
+	b = Array(3,4,4,4,2,2,2,2,2,2,4,4,3,3,2,3,1,4,_
+	4,4,1,3,4,3,1,2,2)
+	For Each x In b
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+	Dim c
+	c = Array(3,3,2,4,4,2,3,3,4,4,4,2,2,2,2,2,2)
+	For Each x In c
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+End Function
+Function 第四层迷宫()
+	Dim a
+	a = Array(2,2,3,3,3,4,1,4,1,3,3,4,1,3,4,1,1,1,2)
+	For Each x In a
+		TracePrint x
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+		
+	Next
+	Dim b
+	b = Array(1,1,2,2,3,1,2,1,1,4,4,3,1,_
+	4,4,3,1,2)
+	For Each x In b
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+	Dim c
+	c = Array(1,1,4,1,3,2,2,2,2,1,3,4,4,1)
+	For Each x In c
+		Delay 100
+		Do
+			ifmove = 1
+			Call move(x)
+			TracePrint "走了一步"
+			Call process()
+			TracePrint "处理完这步"
+			If ifmove = 1 Then 
+				Exit Do
+			End If
+		Loop
+	Next
+	Delay 1000
+	Tap 370, 970
+End Function
+Function move(x)
+	Delay 100
+	TracePrint x 
+	If x = 1 Then 
+		Call 左上()
+	End If
+	If x = 2 Then 
+		Call 右上()
+	End If
+	If x = 3 Then 
+		Call 右下()
+	End If
+	If x = 4 Then 
+		Call 左下()
+	End If
+End Function
+Function 当前位置()
+	Delay 1000
+	KeepCapture
+	//FindPic 0,0,0,0 ,"Attachment:当前位置.png","101010",1,0.7,intX,intY
+	FindMultiColor (0,0,0,0,"8C8B8C","0|-36|00AAFF,2|-68|FFFFFF",_
+	0,0.95,intX, intY)
+	ReleaseCapture 
+	//TracePrint intX, intY
+End Function
+Function 左上()
+	Do
+		Call 当前位置()
+		TracePrint "当前位置是",intX, intY
+		If intX > -1 Then 
+			Dim nx, ny
+			nx = intX - 130
+			ny = intY - 60
+			Tap nx, ny
+			Delay 1000
+			Exit Do 
+		End If
+	Loop
+End Function
+Function 右下()
+	Do
+		Call 当前位置()
+		TracePrint "当前位置是",intX, intY
+		If intX > -1 Then 
+			Dim nx, ny
+			nx = intX + 130
+			ny = intY + 60
+			Tap nx, ny
+			Delay 1000
+			Exit Do 
+		End If
+	Loop
+End Function
+Function 右上()
+	Do
+		Call 当前位置()
+		TracePrint "当前位置是",intX, intY
+		If intX > -1 Then 
+			Dim nx, ny
+			nx = intX + 130
+			ny = intY - 60
+			Tap nx, ny
+			Delay 1000
+			Exit Do 
+		End If
+	Loop
+End Function
+Function 左下()
+	Do
+		Call 当前位置()
+		TracePrint "当前位置是",intX, intY
+		If intX > -1 Then 
+			Dim nx, ny
+			nx = intX - 130
+			ny = intY + 60
+			Tap nx, ny
+			Delay 1000
+			Exit Do 
+		End If
+	Loop
+End Function
+
+Function process()
+	Dim ret
+	Dim cnt = 0
+	//Dim flag = 0
+	Do
+		Delay 1000
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:当前位置.png","050505",0,0.9,intX,intY
+		ReleaseCapture
+		If intX > -1 Then
+			Exit Do 
+		Else 
+			KeepCapture
+			ret = FindPic( 0,0,0,0,_
+			"Attachment:自动决斗.png|Attachment:硬币.png|Attachment:确定.png|Attachment:关闭.png|Attachment:开始.png|Attachment:确定2.png|Attachment:摇摇机.png",_
+			"101010",1,0.7,intX,intY)
+			ReleaseCapture 
+			TracePrint "ret = ", ret
+			TracePrint intX, intY
+			If ret = 0 Then 
+				Call 自动决斗("Attachment:当前位置.png")
+			End If
+			If ret = 1 Then 
+				Call 选硬币()
+			End If
+			If ret = 2 Or ret = 5 Then 
+				Call 确定("Attachment:当前位置.png")
+			End If
+			If ret = 3 Then 
+				Call 关闭()
+			End If
+			If ret = 4 Then 
+				Call 骰子对决()
+			End If
+			If ret = 6 Then 
+				Call 摇摇机()
+			End If
+			cnt = cnt + 1
+			If cnt >= 3 Then 
+				Tap 370,830
+			End If
+		End If
+	Loop
+	
+End Function
+Function 骰子对决()
+	Do
+		Delay 500
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:当前位置.png","050505",0,0.9,intX,intY
+		ReleaseCapture
+		If intX > -1 And intY > -1 Then
+			Exit Do 
+		Else 
+			KeepCapture
+			FindPic 0,0,0,0, "Attachment:开始.png","050505",0,0.9,intX,intY
+			ReleaseCapture 
+			If intX > -1 And intY > -1 Then 
+				Tap intX, intY
+			End If
+			Delay 3000
+			Call 关闭()
+		End If
+	Loop
+		
+End Function
+Function mulcor_自动决斗(cor, cors)
+	Dim cnt = 0
+	Do
+		Delay 500
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:自动决斗.png","050505",0,0.9,intX,intY
+		ReleaseCapture
+		If intX > -1 And intY > -1 Then
+			Tap intX, intY
+			Call mulcor_决斗(cor, cors)
+			Exit Do 
+		Else 
+			cnt = cnt+ 1
+			TracePrint "不是决斗",cnt
+			If cnt > 3 Then 
+				Exit Do
+			End If
+		End If
+	Loop
+End Function
+Function 自动决斗(img_name)
+	Dim cnt = 0
+	Do
+		Delay 500
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:自动决斗.png","050505",0,0.9,intX,intY
+		ReleaseCapture
+		If intX > -1 And intY > -1 Then
+			Tap intX, intY
+			Call 决斗(img_name)
+			Exit Do 
+		Else 
+			cnt = cnt+ 1
+			TracePrint "不是决斗",cnt
+			If cnt > 3 Then 
+				Exit Do
+			End If
+		End If
+	Loop
+	 
+End Function
+Function 选硬币()
+	Do
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:当前位置.png","050505",0,0.8,intX,intY
+		ReleaseCapture 
+		If intX > -1 Then 
+			Exit Do
+		Else 
+			Delay 500
+			KeepCapture
+			FindPic 0,0,0,0, "Attachment:硬币.png","050505",0,0.9,intX,intY
+			ReleaseCapture 
+			If intX > -1 Then 
+				Tap intX, intY
+			End If
+			Delay 2000
+			Call 关闭()
+		End If
+	Loop
+End Function
+Function 摇摇机()
+	Do
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:当前位置.png","050505",0,0.8,intX,intY
+		ReleaseCapture 
+		If intX > -1 Then 
+			Exit Do
+		Else 
+			Delay 500
+			KeepCapture
+			FindPic 0,0,0,0, "Attachment:摇摇机.png","050505",0,0.9,intX,intY
+			ReleaseCapture 
+			If intX > -1 Then 
+				Tap intX, intY
+			End If
+			Delay 2000
+			Call 关闭()
+		End If
+	Loop
+End Function
+Function mulcor_决斗(cor, cors)
+	Do
+		Dim flag
+		flag = 0
+		Delay 3000
+		Dim ret
+		KeepCapture
+		/*ret = FindPic (0,0,0,0,_
+		"Attachment:决斗失败.png|Attachment:决斗胜利.png",_
+		"050505",0,0.9,_
+		intX,intY)*/
+		FindMultiColor (0,0,0,0,"FFFFFF","18|-2|FFFFFF,18|14|FFFFFF,36|-2|FFFFFF,469|235|026428",_
+		0,0.96, intX, intY)
+		ReleaseCapture
+		If intX> -1 Then
+			TracePrint "决斗胜利"
+			Do
+				//FindPic 0,0,0,0, img_name,"050505",0,0.8,intX,intY
+				多点找色(Array(0,0,0,0,cor, cors))
+				If intX > -1 Then 
+					Exit Do
+				Else 
+					Call mulcor_确定(cor, cors)
+				End If
+			Loop
+			flag = 1
+		End If
+		FindMultiColor (0,0,0,0,"FFFFFF","-17|35|FFFFFF,8|37|FFFFFF,-7|82|FFFFFF,343|587|02712C,143|758|823308",_
+		0,0.96, intX, intY)
+		If intX > -1 Then 
+			TracePrint "决斗失败"
+			ifmove = 0
+			Do
+//				KeepCapture
+//				FindPic 0,0,0,0, img_name,"050505",0,0.8,intX,intY
+//				ReleaseCapture 
+				多点找色(Array(0,0,0,0,cor,cors))
+				If intX > -1 Then 
+					Exit Do
+				Else 
+					Call mulcor_确定(cor, cors)
+				End If
+			Loop
+			flag = 1
+		End If
+		If flag = 0 Then 
+			TracePrint "战斗中"
+		Else 
+			Exit Do
+		End If
+	Loop
+End Function
+Function 决斗(img_name)
+	Do
+		Dim flag
+		flag = 0
+		Delay 3000
+		Dim ret
+		KeepCapture
+		/*ret = FindPic (0,0,0,0,_
+		"Attachment:决斗失败.png|Attachment:决斗胜利.png",_
+		"050505",0,0.9,_
+		intX,intY)*/
+		FindMultiColor (0,0,0,0,"FFFFFF","18|-2|FFFFFF,18|14|FFFFFF,36|-2|FFFFFF,469|235|026428",_
+		0,0.96, intX, intY)
+		ReleaseCapture
+		If intX> -1 Then
+			TracePrint "决斗胜利"
+			Do
+				KeepCapture
+				FindPic 0,0,0,0, img_name,"050505",0,0.8,intX,intY
+				ReleaseCapture 
+				If intX > -1 Then 
+					Exit Do
+				Else 
+					Call 确定(img_name)
+				End If
+			Loop
+			flag = 1
+		End If
+		FindMultiColor (0,0,0,0,"FFFFFF","-17|35|FFFFFF,8|37|FFFFFF,-7|82|FFFFFF,343|587|02712C,143|758|823308",_
+		0,0.96, intX, intY)
+		If intX > -1 Then 
+			TracePrint "决斗失败"
+			ifmove = 0
+			Do
+				KeepCapture
+				FindPic 0,0,0,0, img_name,"050505",0,0.8,intX,intY
+				ReleaseCapture 
+				If intX > -1 Then 
+					Exit Do
+				Else 
+					Call 确定(img_name)
+				End If
+			Loop
+			flag = 1
+		End If
+		If flag = 0 Then 
+			TracePrint "战斗中"
+		Else 
+			Exit Do
+		End If
+	Loop
+End Function
+Function try_确定()
+	KeepCapture
+	//FindPic 0,0,0,0,"Attachment:确定.png","050505",0,0.9,intX,intY
+	FindMultiColor 0,0,0,0, "7F3108","8|-2|FFFFFF,10|-2|170902,13|-2|FFFFFF,16|-2|706661,21|1|160C06,24|-2|FFFFFF,27|1|160C06,30|0|FFFFFF,68|-1|823308",_
+	0,0.95,intX, intY
+	ReleaseCapture 
+	If intX > -1 Then 
+	 	TracePrint "点击确定"
+	 	Tap intX, intY
+	End If
+End Function
+Function try_下一步()
+	KeepCapture
+	FindPic 0,0,0,0,"Attachment:下一步.png","050505",0,0.9,intX,intY
+	ReleaseCapture 
+	If intX > -1 Then 
+		TracePrint "点击下一步"
+		Tap intX, intY
+	End If
+End Function
+Function try_取消()
+	FindMultiColor 0, 0, 0, 0, "FEFEFE", "0|-4|080839,2|-8|FFFFFF,1|-12|030357,1|11|FFFFFF,-1|22|060694,-6|0|050579,8|0|FFFFFF", 0, 0.95, intX, intY
+	If intX > -1 Then 
+		Tap intX, intY
+	End If
+End Function
+Function 确定(img_name)
+	Do
+		Delay 1000
+		KeepCapture
+		FindPic 0,0,0,0,img_name,"050505",0,0.9,intX,intY
+		ReleaseCapture 
+		If intX > -1 Then 
+			TracePrint "跳转成功"
+			Exit Do
+		Else 
+			Dim flag = 0
+			TracePrint "跳转中"
+			Call try_确定()
+			Call try_下一步()
+			Call try_跳过对话()
+			Call try_取消()
+			Call try_返回()
+			//Else 
+				//TracePrint "点击空白处", index
+				//Tap xpos(index), ypos(index)
+				//index = (index + 1) Mod (UBOUND(xpos)+1)
+			Call close()
+		End If	
+	Loop
+End Function
+Function try_关闭()
+	KeepCapture
+	FindPic 0,0,0,0, "Attachment:关闭.png|Attachment:关闭2.png","050505",0,0.9,intX,intY
+	ReleaseCapture 
+	If intX > -1 And intY > -1 Then 
+		TracePrint "关闭"
+		Tap intX, intY
+	End If
+End Function
+Function 关闭()
+	Dim cnt = 0
+	Do
+		KeepCapture
+		FindPic 0,0,0,0, "Attachment:当前位置.png","050505",0,0.8,intX,intY
+		ReleaseCapture 
+		If intX > -1 Then 
+			Exit Do
+		Else 
+			Delay 2000
+			KeepCapture
+			FindPic 0,0,0,0, "Attachment:关闭.png|Attachment:关闭2.png","050505",0,0.9,intX,intY
+			ReleaseCapture 
+			If intX > -1 And intY > -1 Then 
+				TracePrint "关闭"
+				Tap intX, intY
+			Else
+				TracePrint "没找到关闭"
+				cnt = cnt + 1
+				If cnt >= 3 Then 
+					Tap 380, 780
+					Exit Do
+				End If
+			End If
+		End If
+	Loop
+	
+	
+End Function
+Function close()
+	Delay 500
+	KeepCapture
+	//FindPic 0,0,0,0, "Attachment:关闭.png|Attachment:关闭2.png","050505",0,0.9,intX,intY
+	FindMultiColor 0,0,0,0,"8C3709","15|0|FFFFFF,20|-1|301303,24|-1|FFFFFF,35|-2|782F07,41|-3|FFFFFF,52|-3|230E02,54|-5|FFFFFF,59|-4|3F1903,63|-4|FFFFFF",_
+	0,0.95,intX,intY
+	ReleaseCapture 
+	If intX > -1 Then 
+		Tap intX, intY
+		TracePrint "find the button of close"
+	End If
+End Function
+/*
+线程ID=BeginThread(时间)
+Sub 时间()
+初始时间= Plugin.Sys.GetTime()
+do
+If Plugin.Sys.GetTime()-初始时间>5000 Then
+ExitScript
+End If
+Delay 1000
+loop
+End Sub
+*/
+Function 显示(a)
+	Do
+		Delay 200
+		ShowMessage a, 1000, 313,24
+		
+	Loop
+End Function
